@@ -47,6 +47,10 @@ switch#show interface ；查看端口信息
 switch#show int f0/0 ；查看指定端口信息
 
 2. 路由器支持的命令：
+路由选择原则
+1子网掩码最长优先
+2管理距离最小优先（0-255）
+3度量值最小优先（跳数，宽带。延迟，花费等等）
 路由器显示命令：
 router#show run ；显示配置信息
 router#show interface ；显示接口信息
