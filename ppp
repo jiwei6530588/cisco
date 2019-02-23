@@ -1,0 +1,68 @@
+ppp协议
+1HDLC是串行接口的默认封装格式，RS232H和计算机的COM口都是串行接口，数据按BIT传输，并行是按BYTE传输，接口模式下可以封装协议
+
+2同步和异步串行通行
+同步传输是发出数据后，对方响应以后才能传输的通信方式，路由器串行接口就是同步传输，需要DCE配置时钟进行同步，
+异步传输就是发出去。不等待对方回应继续发送，计算机和Modem就是这种传输方式。
+
+3PPP特点
+PPPOE 是用在以太网上面，PPPOA用在ATM上
+ppp 三个主要组件，ppp帧格式以HDLC格式为基础，LCP ，NCP
+
+4PPP分层体系结构
+分为LCP 和NCP
+LCP属于数据链路层，NCP是跨域数据链路层和网络层
+LCP 除了建立测试数据链路外，还有两个功能
+1身份验证PAP CHAP
+2压缩 STAC ，MPPC PREDICTOR ，TCP头部压缩
+NCP
+LCP链路建立好后。PPP使用NCP为上层提供接口
+针对不同的网络层协议使用不通接口，IP提供IPCP接口，IPX提供IPX接口，APPtalk提供ATCP 接口
+
+5PPP回话建立
+1链路的建立和配置 LCP的功能
+2链路的质量检测 可选阶段 LCP的可选功能、
+3网络层协议的配置阶段 NCP的功能。双方逻辑链路就链接好了。
+4链路终止 当链路传送完成或者一些外部事件发生
+ppp 验证功能是可选的。
+
+6PAP验证
+在网络上采用明文传输用户名和口令，是一种不健壮的身份验证。容易被暴力破解
+全局配置下
+username R2 password 12345 配置本地验证的用户名和密码
+inter s1/1
+ppp auth pap
+ppp pap sent-username R1 password ABCDE 配置要发送PAP验证的用户名和密码到远端
+
+
+全局配置下
+username R1 password ABCDE
+inter s1/0
+ppp auth pap
+ppp pap sent-username R2 password 12345
+
+PAP不是路由器推荐的验证方式，需要接口下强制发送PAP验证
+PAP验证中的用户名和密码不一定非要对方路由器的名字
+两端路由器可以配置不一样的密码
+
+7CHAP验证
+采用三次握手验证协议，验证路由器询问，被验证路由器响应，验证路由器接受或者拒绝。密码一定要一样,路由器名字也不能该
+sername R2 password 12345
+inter s1/1
+ppp auth chap
+
+
+
+username r1 password 12345
+inter s1/0
+ppp auth chap
+
+也可以用两种验证方式 ppp auth pap chap 
+
+8ppp 基本配置
+1端口模式改变一下封装方式就可以了 enca ppp
+1配置压缩 端口模式下面 compress 前面的四种压缩方式 
+3配置链路质量检测 PPP qulity percentage  只要一个端口配置就可以了， 接口模式下 ppp qulity 80
+4配置链路负载均衡 接口模式下 ppp multilink 多条链路上
+
+
