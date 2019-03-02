@@ -32,5 +32,84 @@ IETF标准
 
 五OSPF相关术语
 链路，当一个接口被加入到OSPF中。称为OSPF的一个链路
-链路状态，
+链路状态，包括IP地址和掩码，接口网络类型
+路由器ID （rid ）可以OSPF进程中手工制定，如果没有，路由器选择环回口最高的IP地址作为RID，环回口没有使用。则选择所有激活的物理接口最高的IP地址作为RID
+邻居：两台或更多路由器在一个公共的网络上面，如两台路由器通过串口相连，或者多台路由器通过以太网口相连
+领接。就是两台路由器之间的关系。这两台路由器允许直接交换更新数据。不是所有的邻居都是领结关系，也不是领结关系就一定是邻居。
+区域。通过划分区域来实行分层设计，自治系统，边界路由器，骨干区域。
+指定路由器（DR）.多路访问网络。需要指定一台路由器，每台路由器都把拓扑变化发给DR和DBR。然后DR通知多路访问中其他路由器
+备份路由器，当DR离线时，BDR变为DR
+花费：根据链路宽带来计算的。并可以认为修改。OSPF唯一度量值就是花费。
+在路由模式下面， auto-cost reference-bandwidth 1000 修改默认参考值。这个值除以实际宽带就是花费。
+
+
+六OSPF包格式
+数据链路层头部，  一般用的是224.0.05 DR用的224.0.0.6
+IP包头部。协议号是89 
+OSPF头部  包类型代码，路由器ID 区域号  五种包 hello ，DBD LSR LSU LSACK 这五种包都被称为LSP。
+
+
+7 hello包
+作用， 发现OSPF邻居， 建立和维护领结关系， 并且多路访问种选择DR和BDR
+头部VERSION,TYPE RID AREA ID CHEK AUTHENTICAION
+数据 hello interval ,priority ,route dead interval
+
+借口模式下 IP OSPF hello-interval 20, ip ospf dead-interval 60 
+
+
+8邻居关系的建立
+DOWN-INIT-TWO-WAY（建立了邻居关系）-EXSTART（选择主路由器，建立主从关系）-EXCHANEG（交换DBD）-LOADING（发送LSR-用LSU回应-LSA确认）-FULL（完全领接状态）
+
+9OSPF的三表
+show ip ospf interface f0/0
+show ip ospf neighour
+show ip ospf database
+
+ROUTE ID 选举
+RID是唯一标示，。如果相同无法建立领结关系，
+1route-ID配置优先
+2最大环回口
+3最大物理地址
+clear ip ospf process(重启进程)
+
+ID和BDR选择
+选择优先级最高的为DR，次高的是BDR，如果优先级相同，RID高的成为DR
+接口模式下
+is ospf priority 0 (优先级为0的路由器不参与选择DR和DBR)
+
+router ospf 1(本地意义)
+route-id 选择输入
+network 192.168.1.0 0.0.0.255 area 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+明文验证
+接口模式下
+ip ospf autherntication-key 12345
+路由配置模式下
+area 0 authentication
+
+MD5验证
+ip ospf message-digest-key 1 md5 cisco
+
+area 0 authentication message-digest
+
+默认路由
+路由模式下
+defalut-information originate
+
+
+
+
 
