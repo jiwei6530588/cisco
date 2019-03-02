@@ -88,8 +88,8 @@ ip summary-address rip  汇总网络
 key chain test
 key 1
 key-string cisco
-接口模式下 ip authentication mode text
-           ip authentication key-chain test
+接口模式下 ip rip authentication mode text
+           ip rip authentication key-chain test
 
 
 路由表结构和路由查找
