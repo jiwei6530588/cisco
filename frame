@@ -1,0 +1,82 @@
+帧中继
+一 概说
+比专线便宜，而且接入方便
+二，帧中继术语
+面向链接的，数据发送之前要建立虚电路，
+DTE DCE
+帧中继工作范围在DTE设备和帧中继交换机之间
+虚电路 两台DTE设备之间的链接称为虚电路（SVC PVC）,SVC有点类似动态路由协议，常用的是静态配置的PVC
+DLCI 数据链路链接标识符 ，原设备和目的设备之间的逻辑电路的一个数据值，本地意义。同一设备DLCI不能相同。不同设备可以相同，帧中继交换通过一对路由器之间映射DLCL来创建永久虚电路。16-1007范围
+LMI 本地管理接口 
+用户设备和帧中继交换机之间的信令标准，管理设置之间的链接。维护设备之间的状态
+作用： 获知路由器分配了那些DLCI，确定PVC的错做状态，那些PVC可以用
+每隔十秒向帧中继交换机发送LMI状态消息查询，每隔五个状态查询，发送一个完全状态查询
+Lmi 类型
+ANSI CISCO q933a
+lmi只要与帧中继交换机上的相连接口的LMI类型配置一致即可，与远端的路由器和交换机的LMI无关。本地意义
+接口模式下 frame-relay lmi-type ?更改类型
+show frame-relay lmi命令查看路由器接口的类型。
+CIR承诺信息速率
+CB 承诺突发
+BE 超量突发
+FECN 前向显示拥塞通知
+BECN 向后显示拥塞通知
+de 允许丢弃
+三 帧中继的运行方式
+帧中继的帧格式
+以太网 目的MAC 原MAC 长度 数据  帧检验序列
+FLAG（开始表示符号） 地址（包括DLCI，FECN，BECN，DE） 数据 帧检验序列 FLAG（结束标识符）
+帧中继交换表
+入站端口 入站DLCI 出站站口 出站DLCI
+
+四帧中继交换机的配置
+网络运营商配置的
+接口模式下
+encapsulation frame-relay
+frame-relay lmi-type ansi
+frame-relay intf-type dce 改成DCE接口
+frame-relay route 103 interface serial1/1 301
+从s1/0接口收到的DLCI号为103的帧中继改成由s1/1接口转发出去。DLCI号改成301
+frame-relay route 104 interface serrial 1/2 401
+从s1/0接口收到的DLCI号为104的帧中继改成由s1/2接口转发出去。DLCI号改成401
+
+五帧中继的寻址
+show frame-relay map 查看路由器上面的帧中继映射
+dynamic 表示动态学的，broadcast表示支持广播，active表示链路正常
+
+反向ARP(inverse arp )
+从DLCI号解析IP地址是由反向ARP完成的。RARP是用在以太网上面。
+过程
+
+
+帧中继水平分割
+全网装，星性 部分网状
+心形拓扑，配置RIP，由于水平分割的原因。HUB不会把从一个接口学到的路由再从这个接口发出去
+解决办法
+1使用全网互联
+2使用静态路由
+3关闭水平分割
+4使用子接口
+点到点
+多点子接口 任然不能解决水平分割
+
+
+帧中继配置
+基本的IP配置，封装协议
+帧中继ping本端
+帧中继找不到DLCI和IP地址的映射，所以PING不通自己
+frame-relay map ip IP地址 DLCI号 broadcast 
+如果不是思科设备还要加上ietf
+
+
+
+rip over 帧中继
+
+
+
+
+
+
+
+
+
